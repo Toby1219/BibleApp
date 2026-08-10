@@ -1,0 +1,26 @@
+1. check tortoise_orm confugurations in db.py
+
+2. Ensure pyproject.toml is valid 
+
+3. init aerich for migrations
+    aerich init -t [PATH TO YOU db.py ].TORTOISE_ORM
+
+4. Make Changes & Generate New Migrations
+    aerich migrate --name add_user_age
+
+5. Apply Migrations
+    aerich upgrade
+
+6. To roll back the last migration
+    aerich downgrade
+
+7. Other Useful Commands
+*-----------------------------------------------------------*
+|Command            |  Description                          |
+|-------------------|---------------------------------------|
+|aerich history     |Show migration history                 |
+|aerich show-ddl    |Show the SQL DDL for current models    |
+|aerich heads       |Show unapplied migrations              |
+|aerich init -t ... |Re-initialize aerich config            |
+|___________________________________________________________|
+
