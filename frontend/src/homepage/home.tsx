@@ -134,10 +134,14 @@ export default function BibleHomepage() {
     const [loadingVerses, setLoadingVerses] = useState(false);
 
     useEffect(() => {
-        apiRequest("get", "/bible/day-verse").then((resp) => { setVerseDay(resp.data) });
-        apiRequest("get", "/bible/book-count").then((resp)=>{ setChapterCount(resp.data) });
+        apiRequest("get", "/bible/day-verse").then((resp) => {
+            setVerseDay(resp.data);
+        });
+        apiRequest("get", "/bible/book-count").then((resp) => {
+            setChapterCount(resp.data);
+        });
         apiRequest("get", "/auth/me").then((resp) => {
-            setUserData(resp.data)
+            setUserData(resp.data);
         });
     }, []);
 
@@ -159,10 +163,18 @@ export default function BibleHomepage() {
             .filter((s) => s.books.length > 0);
     }, [visibleSections, query]);
 
-    const navigate_to_bible = (bible: string, chapter: number = 1, verse: number = 1) => {
-        apiRequest("post", "/bible/passage/book", { bible: bible, chapter: chapter, verse: verse });
+    const navigate_to_bible = (
+        bible: string,
+        chapter: number = 1,
+        verse: number = 1,
+    ) => {
+        apiRequest("post", "/bible/passage/book", {
+            bible: bible,
+            chapter: chapter,
+            verse: verse,
+        });
         navigate(`/bible?book=${bible}&chapter=${chapter}&verse=${verse}`);
-    }
+    };
 
     // Step 1: click a book -> open the chapter picker
     const handleBookClick = (book: string) => {
@@ -175,7 +187,10 @@ export default function BibleHomepage() {
         setPickerChapter(chapter);
         setLoadingVerses(true);
         try {
-            const resp = await apiRequest("get", `/bible/verse-count?book=${pickerBook}&chapter=${chapter}`);
+            const resp = await apiRequest(
+                "get",
+                `/bible/verse-count?book=${pickerBook}&chapter=${chapter}`,
+            );
             setVerseCount(resp.data?.verse ?? DEFAULT_VERSE_COUNT);
         } catch {
             setVerseCount(DEFAULT_VERSE_COUNT);
@@ -205,23 +220,28 @@ export default function BibleHomepage() {
             {/* ----------------------------------------------------------------- */}
             <header className="max-w-6xl mx-auto px-4 sm:px-6 md:px-10 pt-6 sm:pt-8">
                 <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2.5 shrink-0 cursor-pointer" onClick={() => navigate("/")}>
+                    <div
+                        className="flex items-center gap-2.5 shrink-0 cursor-pointer"
+                        onClick={() => navigate("/")}
+                    >
                         <BookOpen size={20} className="text-[#7B2942]" strokeWidth={1.5} />
                         <span className="bh-mono text-[20px] uppercase py-3 text-stone-900">
                             Holy Bible
                         </span>
                     </div>
 
-                    {currentUser && 
-                        (<nav className="hidden md:flex items-center gap-6 bh-mono text-[13px] uppercase text-stone-500 shrink-0 cursor-pointer p-3">
+                    {currentUser && (
+                        <nav className="hidden md:flex items-center gap-6 bh-mono text-[13px] uppercase text-stone-500 shrink-0 cursor-pointer p-3">
                             <a
-                                onClick={() => { navigate("/profile") }}
+                                onClick={() => {
+                                    navigate("/profile");
+                                }}
                                 className="hover:text-[#7B2942] transition-colors"
                             >
                                 {currentUser?.username}
                             </a>
-                        </nav>)
-                    }
+                        </nav>
+                    )}
 
                     {/* Desktop/tablet inline search */}
                     <div className="hidden sm:block relative flex-1 max-w-xs ml-auto">
@@ -300,7 +320,8 @@ export default function BibleHomepage() {
                                 Verse of the day
                             </p>
                             <p className="bh-body text-[13px] leading-snug text-white">
-                                &ldquo;{VERSE_OF_DAY ? VERSE_OF_DAY.text : "Daily verse text"}&rdquo;
+                                &ldquo;{VERSE_OF_DAY ? VERSE_OF_DAY.text : "Daily verse text"}
+                                &rdquo;
                             </p>
                             <p className="bh-mono text-[11px] uppercase mt-3 mb-10 text-white py-3">
                                 {VERSE_OF_DAY ? VERSE_OF_DAY.book : "Daily verse book"}
@@ -322,8 +343,8 @@ export default function BibleHomepage() {
                     <button
                         onClick={() => setActiveSection("all")}
                         className={`bh-mono text-[11px] uppercase px-3.5 py-2 rounded-full whitespace-nowrap transition-colors shrink-0 ${activeSection === "all"
-                            ? "bg-[#7B2942] text-white"
-                            : "bg-stone-100 text-stone-500"
+                                ? "bg-[#7B2942] text-white"
+                                : "bg-stone-100 text-stone-500"
                             }`}
                     >
                         All
@@ -335,11 +356,10 @@ export default function BibleHomepage() {
                                 setActiveSection(
                                     activeSection === section.id ? "all" : section.id,
                                 )
-
                             }
                             className={`bh-mono text-sm uppercase px-3.5 py-2 rounded-full whitespace-nowrap transition-colors shrink-0 ${activeSection === section.id
-                                ? "bg-[#7B2942] text-white"
-                                : "bg-stone-100 text-stone-500"
+                                    ? "bg-[#7B2942] text-white"
+                                    : "bg-stone-100 text-stone-500"
                                 }`}
                         >
                             {section.label}
@@ -414,8 +434,8 @@ export default function BibleHomepage() {
                                     )
                                 }
                                 className={`bh-tab bh-mono text-sm uppercase px-1.5 py-3 mb-0.7 rounded-l-sm transition-colors ${activeSection === section.id
-                                    ? "bg-[#7B2942] text-white"
-                                    : "bg-stone-100 text-stone-500 hover:bg-stone-200"
+                                        ? "bg-[#7B2942] text-white"
+                                        : "bg-stone-100 text-stone-500 hover:bg-stone-200"
                                     }`}
                             >
                                 {section.label}

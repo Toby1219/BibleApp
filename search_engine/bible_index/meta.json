@@ -1,0 +1,72 @@
+{
+  "index_settings": {
+    "docstore_compression": "lz4",
+    "docstore_blocksize": 16384
+  },
+  "segments": [
+    {
+      "segment_id": "8f9d0fb2-2146-43fa-8212-c03b28566a36",
+      "max_doc": 10430,
+      "deletes": null
+    },
+    {
+      "segment_id": "986aff58-ede2-4ba0-8fa9-e0d832f4404e",
+      "max_doc": 10397,
+      "deletes": null
+    },
+    {
+      "segment_id": "6d101c5d-2ed6-482f-b7c8-79933b85ac83",
+      "max_doc": 10066,
+      "deletes": null
+    }
+  ],
+  "schema": [
+    {
+      "name": "book",
+      "type": "text",
+      "options": {
+        "indexing": {
+          "record": "basic",
+          "fieldnorms": true,
+          "tokenizer": "raw"
+        },
+        "stored": true,
+        "fast": false
+      }
+    },
+    {
+      "name": "chapter",
+      "type": "u64",
+      "options": {
+        "indexed": true,
+        "fieldnorms": true,
+        "fast": false,
+        "stored": true
+      }
+    },
+    {
+      "name": "verse",
+      "type": "u64",
+      "options": {
+        "indexed": true,
+        "fieldnorms": true,
+        "fast": false,
+        "stored": true
+      }
+    },
+    {
+      "name": "text",
+      "type": "text",
+      "options": {
+        "indexing": {
+          "record": "position",
+          "fieldnorms": true,
+          "tokenizer": "default"
+        },
+        "stored": true,
+        "fast": false
+      }
+    }
+  ],
+  "opstamp": 30896
+}

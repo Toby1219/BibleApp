@@ -4,22 +4,16 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-actix-web = "4.14"
-sea-orm = { version = "2.0", features = [
-    "sqlx-postgres", # postgres driver
-    "runtime-tokio-rustls", # async runtime + TLS backend
-    "macros", # #[sea-orm::model] drive support
-] }
-
-# Vector database client (gRPC)
-qdrant-client = "1.16"
-
-# Redis client
-redis = { version = "1", features = ["tokio-comp", "connectio-manager"] }
-
+actix-web = "4"
+tantivy = "0.26.1"
+sqlx = { version = "0.8", features = ["runtime-tokio", "postgres"] }
+redis = { version = "1", features = ["tokio-comp", "connection-manager"] }
+anyhow = "1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+log = "0.4"
+env_logger = "0.11"
 dotenvy = "0.15"
 
-# Error handling helper
-anyhow = "1"
+

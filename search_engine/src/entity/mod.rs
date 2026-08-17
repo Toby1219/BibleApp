@@ -1,1 +1,1 @@
-pub mod verse;
+pub mod schemas;
