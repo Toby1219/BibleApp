@@ -44,9 +44,9 @@ def client():
 @pytest.fixture
 def auth_headers(client):
     """Create a real user and return a bearer token for authenticated requests."""
-    email = "authuser@example.com"
+    email = "authuser001@example.com"
     password = "securepassword123"
-    username = "authuser"
+    username = "authuser001"
 
     register_response = client.post(
         "/auth/register",
@@ -72,9 +72,9 @@ class TestAuthRoutes:
         response = client.post(
             "/auth/register",
             json={
-                "email": "testuser002@example.com",
+                "email": "testuser003@example.com",
                 "password": "testpassword123",
-                "username": "testuser002",
+                "username": "testuser003",
             },
         )
         assert response.status_code in STATUS_CODE, response.text
@@ -83,9 +83,9 @@ class TestAuthRoutes:
         client.post(
             "/auth/register",
             json={
-                "email": "logintest002@example.com",
+                "email": "logintest003@example.com",
                 "password": "password123",
-                "username": "logintest002",
+                "username": "logintest003",
             },
         )
 

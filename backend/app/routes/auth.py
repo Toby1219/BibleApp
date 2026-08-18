@@ -22,6 +22,8 @@ from app.core.security import (
     decode_token,
 )
 from app.core.dependencies import get_current_user
+from ..utils.cache import custom_key_builder
+from fastapi_cache.decorator import cache
 
 router = APIRouter()
 
@@ -177,6 +179,7 @@ async def get_me(current_user: User = Depends(get_current_user)):
 
 
 @router.get("/bookmark", response_model=UserBookmarkResponse)
+@cache(expire=600, key_builder=custom_key_builder)
 async def get_bookmarks(current_user: User= Depends(get_current_user)):
     bookmark = await UserBookMark.filter(user=current_user).all()
     
@@ -201,7 +204,6 @@ async def get_bookmarks(current_user: User= Depends(get_current_user)):
 
 @router.post("/save_bookmark", response_model=Dict)
 async def save_bookmark(payload:BookMarkSchema, current_user:User=Depends(get_current_user)):
-    print(f"\n {payload} \n")
     book = await BibleContent.filter(passage__name__icontains=payload.book_name.capitalize(), 
                                      chapter = payload.chapter, verse = payload.verse | 1).prefetch_related("passage").first()
     if not book:

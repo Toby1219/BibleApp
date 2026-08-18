@@ -9,22 +9,18 @@ from app.schemas.schema import (
     BibleBookVerseResponse
 )
 from app.models.bible_models import BibleBook, BibleContent,DailyVerse
-from typing import Dict, List
+from typing import Dict
+from fastapi_cache.decorator import cache
 from datetime import timezone, timedelta, datetime
 import random
 import httpx
 from ..utils.rust_search import search_bible
-
+from ..utils.cache import custom_key_builder
 view_router = APIRouter()
-
-#
-# @view_router.get("/search", response_model="")
-# async def search_view(payload: dict):
-#     pass
-#
 
 
 @view_router.get("/all", response_model=Dict)
+@cache(expire=600, key_builder=custom_key_builder)
 async def get_all_books():
     bible_book = await BibleBook.all().prefetch_related("testament")
     bible = [
@@ -44,6 +40,7 @@ async def get_all_books():
 
 
 @view_router.post("/all", response_model=Dict)
+@cache(expire=600, key_builder=custom_key_builder)
 async def all_books_testament(payload: TestamentQuery):
     bible_testament = payload.testament if payload.testament else "OT"
     bible_book = (
@@ -72,6 +69,7 @@ async def all_books_testament(payload: TestamentQuery):
 
 
 @view_router.post("/passage", response_model=Dict)
+@cache(expire=600, key_builder=custom_key_builder)
 async def get_biblesPassage(payload: BibleBookQuery):
     print(payload)
     bible_books = (
@@ -104,6 +102,7 @@ async def get_biblesPassage(payload: BibleBookQuery):
 
 
 @view_router.post("/passage/book", response_model=Dict)
+@cache(expire=600, key_builder=custom_key_builder)
 async def get_single_book(payload: SingleBibleBookQuery):
     bible_books = (
         await BibleContent.filter(
@@ -133,6 +132,7 @@ async def get_single_book(payload: SingleBibleBookQuery):
     }
 
 @view_router.get("/day-verse", response_model=DailverseResponse)
+@cache(expire=600, key_builder=custom_key_builder)
 async def get_daily_verse():
     day_verse = None
     now = datetime.now(timezone.utc) - timedelta(hours=24)
@@ -153,12 +153,14 @@ async def get_daily_verse():
     return DailverseResponse(book=f"{day_verse.passage.name} {day_verse.chapter}:{day_verse.verse}", text=day_verse.text)
 
 @view_router.get("/book-count", response_model=Dict)
+@cache(expire=600, key_builder=custom_key_builder)
 async def get_books_count():
     books = await BibleBook.all()
     data = {book.name:book.chapters for book in books}
     return data
 
 @view_router.get("/verse-count", response_model=Dict)
+@cache(expire=600, key_builder=custom_key_builder)
 async def get_book_verse(book:str, chapter:int):
     passage = await BibleBook.filter(name__icontains=book.capitalize()).first()
     if not passage:
@@ -171,6 +173,7 @@ async def get_book_verse(book:str, chapter:int):
 
 
 @view_router.get("/search", response_model=list[Dict])
+@cache(expire=600, key_builder=custom_key_builder)
 async def search(q: str, limit: int = 10):
     try:
         results = await search_bible(q, limit)

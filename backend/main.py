@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.services.db import init_db
+from app.utils.cache import caching
 from app.routes.auth import router as auth_route
 
 from app.routes.viwes import view_router as view_routes
@@ -13,7 +14,7 @@ load_dotenv()
 FRONTEND_URL = os.getenv("FRONTEND_URL")
 RUST_SEARCH_URL = os.getenv("RUST_SEARCH_URL")
 
-app = FastAPI()
+app = FastAPI(lifespan=caching)
 
 init_db(app)
 
