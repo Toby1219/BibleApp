@@ -17,6 +17,7 @@ dictdiffer==0.9.0
 dnspython==2.8.0
 email-validator==2.3.0
 fastapi==0.141.1
+fastapi-cache2==0.2.2
 fastapi-cli==0.0.27
 fastapi-cloud-cli==0.20.0
 fastar==0.11.0
@@ -56,6 +57,7 @@ rich==15.0.0
 rich-toolkit==0.20.1
 rignore==0.7.6
 sentry-sdk==2.63.0
+setuptools==84.0.0
 shellingham==1.5.4
 six==1.17.0
 starlette==1.6.0
