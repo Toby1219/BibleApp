@@ -1,6 +1,13 @@
 backend/.venv
 backend/__pycache__
+
 __pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
 .vscode
 .venv
 .env
