@@ -3,7 +3,7 @@ from tortoise.models import Model
 
 
 class User(Model):
-    id = fields.IntField(pk=True)
+    id = fields.IntField(primary_key=True)
     username = fields.CharField(max_length=50, unique=True)
     email = fields.CharField(max_length=255, unique=True)
     hashed_password = fields.CharField(max_length=255)
@@ -20,7 +20,7 @@ class User(Model):
 
 
 class SearchHistory(Model):
-    id = fields.IntField(pk=True)
+    id = fields.IntField(primary_key=True)
     user = fields.ForeignKeyField(
         "auth_models.User", related_name="search_history", on_delete=fields.NO_ACTION
     )
@@ -42,7 +42,7 @@ class SearchHistory(Model):
 
 
 class UserBookMark(Model):
-    id = fields.IntField(pk=True)
+    id = fields.IntField(primary_key=True)
     user = fields.ForeignKeyField(
         "auth_models.User", related_name="bookmarks", on_delete=fields.NO_ACTION
     )

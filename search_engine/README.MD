@@ -1,3 +1,12 @@
+# 🔍 Search engine
+
+> Hybrid semantic search powered by rust tantivy and served through actix-web 
+
+![Rust](https://img.shields.io/badge/Rust-Search_Engine-000000?style=flat-square&logo=rust&logoColor=white)
+
+## 🗂️ Folder Structure
+```bash
+|
 ├── bible_index/ ()
 │   
 ├── Cargo.lock
@@ -14,3 +23,4 @@
     │   └── search.rs
     ├── lib.rs
     └── main.rs
+```

@@ -3,7 +3,7 @@ from tortoise.models import Model
 
 
 class BibleTestament(Model):
-    id = fields.IntField(pk=True)
+    id = fields.IntField(primary_key=True)
     name = fields.CharField(max_length=100)
     short_name = fields.CharField(max_length=2)
 
@@ -17,7 +17,7 @@ class BibleTestament(Model):
 
 class BibleBook(Model):
     # Genesis, exodus etc
-    id = fields.IntField(pk=True)
+    id = fields.IntField(primary_key=True)
     name = fields.CharField(max_length=100, unique=True)
     testament = fields.ForeignKeyField(
         "bible_models.BibleTestament", related_name="books", on_delete=fields.NO_ACTION
@@ -37,7 +37,7 @@ class BibleBook(Model):
 
 
 class BibleVersion(Model):
-    id = fields.IntField(pk=True)
+    id = fields.IntField(primary_key=True)
     name = fields.CharField(max_length=100)
     short_name = fields.CharField(max_length=50, null=True)
 
@@ -50,7 +50,7 @@ class BibleVersion(Model):
 
 
 class BibleContent(Model):
-    id = fields.IntField(pk=True)
+    id = fields.IntField(primary_key=True)
     heading = fields.CharField(max_length=300, null=True)
     passage = fields.ForeignKeyField(
         "bible_models.BibleBook", related_name="passages", on_delete=fields.NO_ACTION
@@ -72,7 +72,7 @@ class BibleContent(Model):
 
 
 class DailyVerse(Model):
-    id = fields.IntField(pk=True)
+    id = fields.IntField(primary_key=True)
     book = fields.ForeignKeyField(
         "bible_models.BibleContent", related_name="bible_book", on_delete=fields.CASCADE
     )

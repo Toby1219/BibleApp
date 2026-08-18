@@ -12,7 +12,7 @@
 
 ## 📌 Overview
 
-**`bible_webapp`** is an end-to-end platform for indexing, and serving scripture texts with low-latency search capabilities. It combines a **Python/FastAPI** backend for ORM data modeling and REST API endpoints with a specialized **Rust** microservice for high-speed lexical and vector search indexing.
+**`Bible_webapp`** is an end-to-end platform for indexing, and serving scripture texts with low-latency search capabilities. It combines a **Python/FastAPI** backend for ORM data modeling and REST API endpoints with a specialized **Rust** microservice for high-speed lexical and vector search indexing.
 
 ---
 
