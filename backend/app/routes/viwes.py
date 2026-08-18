@@ -12,6 +12,8 @@ from app.models.bible_models import BibleBook, BibleContent,DailyVerse
 from typing import Dict, List
 from datetime import timezone, timedelta, datetime
 import random
+import httpx
+from ..utils.rust_search import search_bible
 
 view_router = APIRouter()
 
@@ -168,6 +170,13 @@ async def get_book_verse(book:str, chapter:int):
     return data
 
 
-
-async def search():
-    pass
+@view_router.get("/search", response_model=list[Dict])
+async def search(q: str, limit: int = 10):
+    try:
+        results = await search_bible(q, limit)
+        print(f"\n {type(results)} \n")
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=f"search service error: {e}")
+    except httpx.RequestError as e:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=f"search service unavailable: {e}")
+    return results
