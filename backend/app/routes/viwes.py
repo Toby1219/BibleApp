@@ -173,13 +173,17 @@ async def get_book_verse(book:str, chapter:int):
 
 
 @view_router.get("/search", response_model=list[Dict])
-@cache(expire=600, key_builder=custom_key_builder)
-async def search(q: str, limit: int = 10):
+# @cache(expire=600, key_builder=custom_key_builder)
+async def search(q: str, limit: int = 20):
     try:
         results = await search_bible(q, limit)
-        print(f"\n {type(results)} \n")
     except httpx.HTTPStatusError as e:
         raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=f"search service error: {e}")
     except httpx.RequestError as e:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=f"search service unavailable: {e}")
     return results
+
+
+"""
+
+"""

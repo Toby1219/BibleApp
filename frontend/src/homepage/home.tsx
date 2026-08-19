@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, type KeyboardEvent } from "react";
 import { Search, BookOpen, ChevronRight, X } from "lucide-react";
 import "./home.css";
 
@@ -154,14 +154,24 @@ export default function BibleHomepage() {
 
     const filteredSections = useMemo(() => {
         if (!query.trim()) return visibleSections;
-        const q = query.trim().toLowerCase();
+        // const q = query.trim().toLowerCase();
         return visibleSections
             .map((s) => ({
                 ...s,
-                books: s.books.filter((b) => b.toLowerCase().includes(q)),
+                books: s.books.filter((b) => b.toLowerCase()),
             }))
             .filter((s) => s.books.length > 0);
     }, [visibleSections, query]);
+
+    
+    const deepSearchHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (!query.trim()){ return }
+        // navigate to search page with phrase in the search url query prama
+        if (event.key == "Enter" && query.length > 1){
+            navigate(`/search?q=${query}`)
+
+        }
+    };
 
     const navigate_to_bible = (
         bible: string,
@@ -228,20 +238,28 @@ export default function BibleHomepage() {
                         <span className="bh-mono text-[20px] uppercase py-3 text-stone-900">
                             Holy Bible
                         </span>
-                    </div>
 
-                    {currentUser && (
-                        <nav className="hidden md:flex items-center gap-6 bh-mono text-[13px] uppercase text-stone-500 shrink-0 cursor-pointer p-3">
-                            <a
+                    </div>
+                    <br />
+                    <div className="p-3">
+                        {currentUser ? (
+                            <span
                                 onClick={() => {
                                     navigate("/profile");
                                 }}
-                                className="hover:text-[#7B2942] transition-colors"
+                                className="bh-mono uppercase text-[13px] p-2 cursor-pointer hover:text-[#7B2942] transition-colors"
                             >
                                 {currentUser?.username}
-                            </a>
-                        </nav>
-                    )}
+                            </span>
+                            
+                        ):(
+                            <>
+                            <span className="bh-mono uppercase text-[13px] p-2 cursor-pointer" onClick={()=>navigate("/register")}>Sign-In</span>
+
+                            <span className="bh-mono uppercase text-[13px] p-2 cursor-pointer" onClick={()=>navigate("/login")}>Login-In</span>
+                            </>
+                        )}
+                    </div>
 
                     {/* Desktop/tablet inline search */}
                     <div className="hidden sm:block relative flex-1 max-w-xs ml-auto">
@@ -254,10 +272,12 @@ export default function BibleHomepage() {
                             type="text"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
+                            onKeyDown={deepSearchHandler}
                             placeholder="Search a book…"
                             aria-label="Search a book"
-                            className="bh-mono w-full text-[14px] uppercase tracking-widest pl-9 pr-3 py-2.5 rounded-sm border border-stone-200 bg-stone-50 text-stone-800 placeholder:text-stone-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7B2942] transition-colors"
+                            className="bh-mono w-full text-[14px] tracking-widest pl-9 pr-3 py-2.5 rounded-sm border border-stone-200 bg-stone-50 text-stone-800 placeholder:text-stone-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7B2942] transition-colors"
                         />
+                        
                     </div>
 
                     {/* Mobile search toggle */}
@@ -287,10 +307,11 @@ export default function BibleHomepage() {
                             type="text"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
+                            onKeyDown={deepSearchHandler}
                             placeholder="Search a book…"
                             aria-label="Search a book"
                             autoFocus
-                            className="bh-mono w-full text-[11px] uppercase tracking-widest pl-9 pr-3 py-3 rounded-sm border border-stone-200 bg-stone-50 text-stone-800 placeholder:text-stone-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7B2942] transition-colors"
+                            className="bh-mono w-full text-[11px] tracking-widest pl-9 pr-3 py-3 rounded-sm border border-stone-200 bg-stone-50 text-stone-800 placeholder:text-stone-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7B2942] transition-colors"
                         />
                     </div>
                 )}

@@ -24,8 +24,10 @@ pub struct SearchQuery {
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct VerseResult {
-    reference: String,
-    snippet: String,
+    book: String,
+    chapter: u64,
+    verse:u64,
+    text: String,
     score: f32,
 }
 
@@ -70,12 +72,17 @@ pub async fn search(
         let chapter = retrieved.get_first(state.schema.chapter).and_then(|v| v.as_u64()).unwrap_or(0);
         let verse = retrieved.get_first(state.schema.verse).and_then(|v| v.as_u64()).unwrap_or(0);
 
-        let snippet = snippet_generator.snippet_from_doc(&retrieved);
-        let highlighted = snippet.to_html(); // wraps matched terms in <b>...</b>
+        let highlighted = retrieved
+            .get_first(state.schema.text)
+            .and_then(|v| v.as_str() )
+            .unwrap_or("")
+            .to_string();
 
         results.push(VerseResult {
-            reference: format!("{book} {chapter}:{verse}"),
-            snippet: highlighted,
+            book,
+            chapter,
+            verse,
+            text: highlighted,
             score,
         });
     }

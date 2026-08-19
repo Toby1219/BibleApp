@@ -6,6 +6,7 @@ import ReaderPage from "./homepage/bible";
 import ProfilePage from "./authpage/user";
 import LoginPage from "./authpage/login";
 import SignupPage from "./authpage/register";
+import SearchResults from "./homepage/search";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/register" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/search" element={<SearchResults/>}/>
       </Routes>
     </>
   );
