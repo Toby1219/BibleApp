@@ -2,6 +2,7 @@ backend/.venv
 backend/__pycache__
 
 __pycache__/
+__pycache__
 *.py[oc]
 build/
 dist/
@@ -15,3 +16,5 @@ search_engine/.env
 uv.lock
 pyproject.toml
 search_engine/target/
+
+.pytest_cache

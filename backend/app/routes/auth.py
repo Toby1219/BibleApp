@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status, Depends, Response, Request
 from typing import Dict
 import jwt
-from datetime import timedelta, datetime,timezone
+from fastapi_cache.decorator import cache
 from app.models.models import User, SearchHistory, UserBookMark
 from app.models.bible_models import BibleContent
 from app.schemas.schema import (
@@ -23,15 +23,15 @@ from app.core.security import (
 )
 from app.core.dependencies import get_current_user
 from ..utils.cache import custom_key_builder
-from fastapi_cache.decorator import cache
+from ..utils.limiter import limiter
 
 router = APIRouter()
-
 
 @router.post(
     "/register", response_model=UserRegisterResponse, status_code=status.HTTP_201_CREATED
 )
-async def register(payload: UserCreate):
+@limiter.limit("2/minute")
+async def register(request: Request, payload: UserCreate):
     # Check for existing user
     if await User.filter(username=payload.username).exists():
         raise HTTPException(
@@ -51,7 +51,8 @@ async def register(payload: UserCreate):
 
 
 @router.post("/login", response_model=Token)
-async def login(response: Response, payload: UserLogin):
+@limiter.limit("2/minute")
+async def login(request: Request, response: Response, payload: UserLogin):
     user: User = await User.get_or_none(email=payload.email)
     if not user or not verify_password(payload.password, user.hashed_password):
         raise HTTPException(
@@ -93,6 +94,7 @@ async def login(response: Response, payload: UserLogin):
 
 
 @router.post("/refresh", response_model=Token)
+@limiter.limit("2/minute")
 async def refresh_token(
     response: Response, request: Request, refresh_token: str = None
 ):
@@ -144,7 +146,8 @@ async def refresh_token(
 
 
 @router.get("/me", response_model=UserPrivateResponse)
-async def get_me(current_user: User = Depends(get_current_user)):
+@limiter.limit("2/minute")
+async def get_me(request: Request, current_user: User = Depends(get_current_user)):
     
     if current_user.is_superuser:
         return UserAdminresponse.model_validate(current_user, from_attributes=True)
@@ -179,8 +182,9 @@ async def get_me(current_user: User = Depends(get_current_user)):
 
 
 @router.get("/bookmark", response_model=UserBookmarkResponse)
+@limiter.limit("2/minute")
 @cache(expire=600, key_builder=custom_key_builder)
-async def get_bookmarks(current_user: User= Depends(get_current_user)):
+async def get_bookmarks(request: Request, current_user: User= Depends(get_current_user)):
     bookmark = await UserBookMark.filter(user=current_user).all()
     
     needed_id = {b.book_id for b in bookmark}
@@ -203,7 +207,8 @@ async def get_bookmarks(current_user: User= Depends(get_current_user)):
     )
 
 @router.post("/save_bookmark", response_model=Dict)
-async def save_bookmark(payload:BookMarkSchema, current_user:User=Depends(get_current_user)):
+@limiter.limit("2/minute")
+async def save_bookmark(request: Request, payload:BookMarkSchema, current_user:User=Depends(get_current_user)):
     book = await BibleContent.filter(passage__name__icontains=payload.book_name.capitalize(), 
                                      chapter = payload.chapter, verse = payload.verse | 1).prefetch_related("passage").first()
     if not book:
