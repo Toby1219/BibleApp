@@ -68,7 +68,6 @@ async def get_current_user(
         raise credentials_excepton
     
     db_token = await UserToken.get_or_none(user=user).first()
-    print(f"\n Users db tokens:  {db_token} \n")
     if not db_token:
         raise credentials_excepton_db
 
