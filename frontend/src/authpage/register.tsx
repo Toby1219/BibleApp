@@ -172,7 +172,7 @@ export default function SignupPage() {
                 <p className="bh-body text-sm text-stone-500 text-center mt-7">
                     Already have an account?{" "}
                     <a
-                        href="#login"
+                        onClick={() => navigate("/login")}
                         className="text-[#7B2942] hover:opacity-70 transition-opacity"
                     >
                         Sign in

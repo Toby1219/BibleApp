@@ -133,7 +133,7 @@ export default function LoginPage() {
                 <p className="bh-body text-sm text-stone-500 text-center mt-7">
                     New to Folio?{" "}
                     <a
-                        href="#signup"// link to signup page using Routes
+                        onClick={() => navigate("/register")}
                         className="text-[#7B2942] hover:opacity-70 transition-opacity"
                     >
                         Create an account

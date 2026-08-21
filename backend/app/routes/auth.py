@@ -157,7 +157,8 @@ async def refresh_token(
     new_refresh_token = create_refresh_token(token_data)
     db_token.access_token = new_access_token
     db_token.refresh_token = new_refresh_token
-    await db_token.save(update_fields=["access_token", "refresh_token"])   
+    db_token.revoked = False
+    await db_token.save(update_fields=["access_token", "refresh_token", "revoked"])   
 
     response.set_cookie(
         key="access_token",

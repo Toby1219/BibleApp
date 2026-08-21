@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import {
   BookOpen,
-  Search,
   X,
   Bookmark,
   ChevronLeft,
   ChevronRight,
   Minus,
   Plus,
+  Menu,
+  UserCircle,
+  LogIn,
 } from "lucide-react";
 import "./bible.css";
 import { useSearchParams, useNavigate } from "react-router-dom";
@@ -26,7 +28,7 @@ export default function ReaderPage() {
   const currentUser = useGlobalVar((state) => state.user);
   const setUserData = useGlobalVar((state) => state.setUserData);
 
-  const [query, setQuery] = useState("");
+  // const [query, setQuery] = useState("");
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
   const [bookmarkedVerses, setBookmarkedVerses] = useState<Set<number>>(
@@ -211,30 +213,24 @@ export default function ReaderPage() {
           </div>
 
           <nav className="hidden md:flex items-center gap-6 bh-mono text-[11px] uppercase text-stone-500 shrink-0">
-            <a
+            {/* <a
               onClick={() => {
                 navigate("/profile");
               }}
               className="hover:text-[#7B2942] transition-colors"
             >
               Profile
-            </a>
+            </a> */}
           </nav>
 
-          <div className="hidden sm:block relative flex-1 max-w-xs ml-auto">
-            <Search
-              size={14}
-              strokeWidth={1.5}
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#7B2942]"
-            />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search a book…"
-              aria-label="Search a book"
-              className="bh-mono w-full text-[11px] uppercase tracking-widest pl-9 pr-3 py-2.5 rounded-sm border border-stone-200 bg-stone-50 text-stone-800 placeholder:text-stone-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7B2942] transition-colors"
-            />
+          <div className="hidden sm:block ml-auto">
+            <a
+              onClick={() => {currentUser ? navigate("/profile") : navigate("/login")}}
+              className="flex items-center text-[17px] gap-2 hover:text-[#7B2942] transition-colors cursor-pointer"
+            >
+              {currentUser ? <UserCircle size={18} strokeWidth={1.5} /> : <LogIn size={18} strokeWidth={1.5} />}
+              {currentUser ? "Profile" : "Login"}
+            </a>
           </div>
 
           <button
@@ -246,27 +242,20 @@ export default function ReaderPage() {
             {mobileSearchOpen ? (
               <X size={18} strokeWidth={1.5} />
             ) : (
-              <Search size={18} strokeWidth={1.5} />
+              <Menu size={18} strokeWidth={1.5} />
             )}
           </button>
         </div>
 
         {mobileSearchOpen && (
           <div className="sm:hidden relative mt-4 bh-fade-in">
-            <Search
-              size={14}
-              strokeWidth={1.5}
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#7B2942]"
-            />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search a book…"
-              aria-label="Search a book"
-              autoFocus
-              className="bh-mono w-full text-[11px] uppercase tracking-widest pl-9 pr-3 py-3 rounded-sm border border-stone-200 bg-stone-50 text-stone-800 placeholder:text-stone-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7B2942] transition-colors"
-            />
+            <a
+                onClick={() => {currentUser ? navigate("/profile") : navigate("/login")}}
+                className="flex items-center text-[13px] gap-2 hover:text-[#7B2942] transition-colors cursor-pointer"
+              >
+                {currentUser ? <UserCircle size={18} strokeWidth={1.5} /> : <LogIn size={18} strokeWidth={1.5} />}
+                {currentUser ? "Profile" : "Login"}
+            </a>
           </div>
         )}
       </header>
@@ -385,7 +374,7 @@ export default function ReaderPage() {
               handlePage("prev");
             }}
             disabled={isFirst}
-            className="flex items-center gap-1.5 bh-mono text-[10px] uppercase text-stone-500 hover:text-[#7B2942] disabled:opacity-30 disabled:hover:text-stone-500 transition-colors"
+            className="flex items-center gap-1.5 bh-mono text-[13px] uppercase text-stone-500 hover:text-[#7B2942] disabled:opacity-30 disabled:hover:text-stone-500 transition-colors"
           >
             <ChevronLeft size={14} strokeWidth={1.5} />
             {isFirst ? "Start of book" : "Previous"}
@@ -395,7 +384,7 @@ export default function ReaderPage() {
               handlePage("next");
             }}
             disabled={isLast}
-            className="flex items-center gap-1.5 bh-mono text-[10px] uppercase text-stone-500 hover:text-[#7B2942] disabled:opacity-30 disabled:hover:text-stone-500 transition-colors"
+            className="flex items-center gap-1.5 bh-mono text-[13px] uppercase text-stone-500 hover:text-[#7B2942] disabled:opacity-30 disabled:hover:text-stone-500 transition-colors"
           >
             {isLast
               ? "End of book"

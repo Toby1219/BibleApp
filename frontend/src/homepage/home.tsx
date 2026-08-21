@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, type KeyboardEvent } from "react";
-import { Search, BookOpen, ChevronRight, X } from "lucide-react";
+import { Search, BookOpen, ChevronRight, X} from "lucide-react";
 import "./home.css";
 
 import { apiRequest } from "../axiosinit";
@@ -255,8 +255,6 @@ export default function BibleHomepage() {
                         ):(
                             <>
                             <span className="bh-mono uppercase text-[13px] p-2 cursor-pointer" onClick={()=>navigate("/register")}>Sign-In</span>
-
-                            <span className="bh-mono uppercase text-[13px] p-2 cursor-pointer" onClick={()=>navigate("/login")}>Login-In</span>
                             </>
                         )}
                     </div>
