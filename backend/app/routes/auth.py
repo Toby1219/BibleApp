@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status, Depends, Response, Request
 from typing import Dict
 import jwt
 from fastapi_cache.decorator import cache
-from app.models.models import User, SearchHistory, UserBookMark
+from app.models.models import User, SearchHistory, UserBookMark, UserToken
 from app.models.bible_models import BibleContent
 from app.schemas.schema import (
     Token,
@@ -27,9 +27,7 @@ from ..utils.limiter import limiter
 
 router = APIRouter()
 
-@router.post(
-    "/register", response_model=UserRegisterResponse, status_code=status.HTTP_201_CREATED
-)
+@router.post("/register", response_model=UserRegisterResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("2/minute")
 async def register(request: Request, payload: UserCreate):
     # Check for existing user
@@ -65,8 +63,29 @@ async def login(request: Request, response: Response, payload: UserLogin):
         )
 
     token_data = {"sub": str(user.id), "username": user.username, "email": user.email}
-    access_token = create_access_token(token_data)
-    refresh_token_ = create_refresh_token(token_data)
+    access_token = None
+    refresh_token_ = None
+    
+    # Write tokens db
+    db_token = await UserToken.get_or_none(user=user)
+    # If db token does not exist create it
+    if not db_token:
+        access_token = create_access_token(token_data)
+        refresh_token_ = create_refresh_token(token_data)
+        new_db_token = await UserToken.create(user=user, access_token=access_token, refresh_token=refresh_token_, revoked=False)
+        await new_db_token.save()
+    # If db token and recoked update db tokens
+    if db_token and db_token.revoked == True:
+        access_token = create_access_token(token_data)
+        refresh_token_ = create_refresh_token(token_data)
+        db_token.access_token = access_token
+        db_token.refresh_token = refresh_token_
+        db_token.revoked = False
+        await db_token.save(update_fields=["access_token", "refresh_token", "revoked"])
+    # If db token and has not been revoked retrun access token refresh token
+    if db_token and db_token.revoked == False:
+        access_token = db_token.access_token
+        refresh_token_ = db_token.refresh_token
 
     # Set Cookies for https Auth
     response.set_cookie(
@@ -112,7 +131,12 @@ async def refresh_token(
                 status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token type"
             )
         user_id = payload.get("sub")
+        db_token = await UserToken.get_or_none(user_id=int(user_id))
+        
     except jwt.ExpiredSignatureError:
+        if db_token:
+            db_token.revoked = True
+            await db_token.save(update_fields=["revoked"])
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Refresh token expired"
         )
@@ -129,8 +153,12 @@ async def refresh_token(
         )
 
     token_data = {"sub": str(user.id), "username": user.username}
-
     new_access_token = create_access_token(token_data)
+    new_refresh_token = create_refresh_token(token_data)
+    db_token.access_token = new_access_token
+    db_token.refresh_token = new_refresh_token
+    await db_token.save(update_fields=["access_token", "refresh_token"])   
+
     response.set_cookie(
         key="access_token",
         value=new_access_token,
@@ -139,11 +167,45 @@ async def refresh_token(
         samesite="lax",
         max_age=86400,
     )
+    
+    response.set_cookie(
+        key="refresh_token",
+        value=new_refresh_token,
+        httponly=True,
+        secure=False,  # Set true for production
+        samesite="lax",
+        max_age=86400,
+    )
     return Token(
         access_token=new_access_token,
-        refresh_token=create_refresh_token(token_data),
+        refresh_token=new_refresh_token,
     )
 
+@router.post("/logout", response_model=Dict)
+@limiter.limit("2/minute")
+async def logout(request: Request, response: Response, current_user: User = Depends(get_current_user)):
+    db_token = await UserToken.get(user=current_user)
+    db_token.revoked = True
+    await db_token.save(update_fields={"revoked"})
+    response.set_cookie(
+        key="access_token",
+        value="",
+        httponly=True,
+        secure=False,  # Set true for production
+        samesite="lax",
+        max_age=86400,
+    )
+    
+    response.set_cookie(
+        key="refresh_token",
+        value="",
+        httponly=True,
+        secure=False,  # Set true for production
+        samesite="lax",
+        max_age=86400,
+    )
+    return {"messsage":f"User {current_user.username} has sucessfully logout "}
+    
 
 @router.get("/me", response_model=UserPrivateResponse)
 @limiter.limit("2/minute")
@@ -178,8 +240,6 @@ async def get_me(request: Request, current_user: User = Depends(get_current_user
         search_count=len(search_history),
         search_history=search_history_book
     )
-
-
 
 @router.get("/bookmark", response_model=UserBookmarkResponse)
 @limiter.limit("2/minute")

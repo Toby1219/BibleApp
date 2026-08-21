@@ -3,7 +3,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import jwt
 
 from app.core.security import decode_token
-from app.models.models import User
+from app.models.models import User, UserToken
 
 bearer_scheme = HTTPBearer(auto_error=False)
 
@@ -13,6 +13,11 @@ credentials_excepton = HTTPException(
     headers={"WWW-Authenticate": "Bearer"},
 )
 
+credentials_excepton_db = HTTPException(
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="API key is invalid login to get new API keys",
+    headers={"WWW-Authenticate": "Bearer"},
+)
 
 def validate_token(token: str, exception):
     try:
@@ -36,6 +41,7 @@ async def check_http_cookies(request: Request, exception, tokenType="access_toke
     token = request.cookies.get(tokenType)
     if not token:
         return None
+        
     return validate_token(token, exception)
 
 
@@ -50,6 +56,7 @@ async def get_current_user(
 ) -> User:
 
     user_id = await check_http_cookies(request, credentials_excepton)
+    
     if user_id is None:
         user_id = await check_credentials(credentials, credentials_excepton)
 
@@ -59,6 +66,12 @@ async def get_current_user(
     user = await User.get_or_none(id=int(user_id))
     if user is None or not user.is_active:
         raise credentials_excepton
+    
+    db_token = await UserToken.get_or_none(user=user).first()
+    print(f"\n Users db tokens:  {db_token} \n")
+    if not db_token:
+        raise credentials_excepton_db
+
     return user
 
 

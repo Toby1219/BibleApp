@@ -18,6 +18,12 @@ class User(Model):
     def __str__(self):
         return self.username
 
+class UserToken(Model):
+    id = fields.IntField(primary_key=True)
+    user = fields.ForeignKey("auth_models.User", related_name="tokens", on_delete=fields.NO_ACTION)
+    access_token = fields.TextField()
+    refresh_token = fields.TextField()
+    revoked = fields.BooleanField()
 
 class SearchHistory(Model):
     id = fields.IntField(primary_key=True)
