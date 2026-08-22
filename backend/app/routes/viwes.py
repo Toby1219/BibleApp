@@ -8,7 +8,8 @@ from app.schemas.schema import (
     DailverseResponse,
 )
 
-from app.models.bible_models import BibleBook, BibleContent,DailyVerse
+from app.models.bible_models import BibleBook, BibleContent, DailyVerse
+from app.models.models import SearchHistory, User
 from typing import Dict
 from fastapi_cache.decorator import cache
 from datetime import timezone, timedelta, datetime
@@ -74,17 +75,30 @@ async def all_books_testament(request: Request, payload: TestamentQuery):
 @view_router.post("/passage", response_model=Dict)
 @limiter.limit("5/minute")
 async def get_biblesPassage(request: Request, payload: BibleBookQuery):
-    print(payload)
     bible_books = (
         await BibleContent.filter(
-            passage__name__icontains=payload.book_name.capitalize(),chapter=payload.chapter,
+            passage__name__icontains=payload.book_name.capitalize(),
+            chapter=payload.chapter,
         )
         .prefetch_related("passage", "version")
         .order_by("chapter", "verse")
         .all()
     )
     passage_testament = await BibleBook.filter(name=bible_books[0].passage.name).prefetch_related("testament").first() if bible_books else ""
-
+    if payload.searched and payload.user_mail:
+        u = await User.filter(email=payload.user_mail).first()
+        target_book = await BibleContent.filter(
+            id__in=[b.id for b in bible_books],
+            passage__name=payload.book_name.capitalize(),
+            chapter=payload.chapter,
+            verse=payload.verse
+        ).first()
+        
+        saved_search = await SearchHistory.filter(book_id=bible_books[0].id).first()
+        if not saved_search and target_book:
+            search = await SearchHistory.create(user=u, phrase=payload.phrase, book=target_book)
+            await search.save()
+    
     return {
         "total_chapters": bible_books[0].passage.chapters if bible_books else 0,
         "total_count": len(bible_books),
@@ -179,7 +193,7 @@ async def get_book_verse(request: Request, book:str, chapter:int):
 
 
 @view_router.get("/search", response_model=list[Dict])
-@limiter.limit("3/minute")
+@limiter.limit("5/minute")
 async def search(request: Request, q: str, limit: int = 20):
     try:
         results = await search_bible(q, limit)
@@ -189,7 +203,3 @@ async def search(request: Request, q: str, limit: int = 20):
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=f"search service unavailable: {e}")
     return results
 
-
-"""
-
-"""

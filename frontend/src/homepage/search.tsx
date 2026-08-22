@@ -69,7 +69,6 @@ export default function SearchResults() {
 
         try {
             const response = await apiRequest("get", `/bible/search?q=${query}&limit=${limit }`,);
-            console.log(response.data);
             setSearchState({
                 results: response.data || [],
                 isLoading: false,
@@ -99,20 +98,19 @@ export default function SearchResults() {
     const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (localQuery.trim()) {
-            console.log(localQuery);
             performSearch(localQuery, limit);
             setMobileSearchOpen(false);
         }
     };
 
     const handleResultClick = (result: SearchResult) => {
-        apiRequest("post", "/bible/passage/book", {
-            bible: result.book,
-            chapter: result.chapter,
-            verse: result.verse,
-        });
+        // apiRequest("post", "/bible/passage/book", {
+        //     bible: result.book,
+        //     chapter: result.chapter,
+        //     verse: result.verse,
+        // });
         navigate(
-        `/bible?book=${encodeURIComponent(result.book)}&chapter=${result.chapter}&verse=${result.verse}`
+        `/bible?book=${encodeURIComponent(result.book)}&chapter=${result.chapter}&verse=${result.verse}&s=true&p=${localQuery}`
         );
     };
 

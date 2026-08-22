@@ -100,6 +100,10 @@ class TestamentQuery(BaseModel):
 class BibleBookQuery(BaseModel):
     book_name: str
     chapter: int
+    verse: Optional[int]
+    searched: bool
+    phrase: Optional[str]
+    user_mail: Optional[str]
 
 
 class SingleBibleBookQuery(BaseModel):

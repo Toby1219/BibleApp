@@ -30,7 +30,7 @@ class SearchHistory(Model):
     user = fields.ForeignKeyField(
         "auth_models.User", related_name="search_history", on_delete=fields.NO_ACTION
     )
-    pharse = fields.CharField(max_length=200, null=True)
+    phrase = fields.CharField(max_length=200, null=True)
     book = fields.ForeignKeyField(
         "bible_models.BibleContent",
         related_name="search_passage",

@@ -41,6 +41,8 @@ export default function ReaderPage() {
   const [chapter, setChapter] = useState(
     searchParams.get("chapter") ? Number(searchParams.get("chapter")) : 1,
   );
+  const fromSearch = searchParams.get("s") === "true" ? true : false;
+  const phrase = searchParams.get("p") || "";
   const [verse, setVerse] = useState(searchParams.get("verse"));
 
   const [testament, setTestament] = useState("Old Testment");
@@ -62,10 +64,14 @@ export default function ReaderPage() {
         setBookmarks(resp.data.bookmark_passage);
       });
     });
-
+    
     apiRequest("post", "/bible/passage", {
       book_name: book,
       chapter: chapter,
+      verse: verse,
+      searched: currentUser ? fromSearch : false,
+      phrase: phrase,
+      user_mail: currentUser ? currentUser.email : "",
     }).then((response) => {
       const data = response.data;
       const newVerse = data.data.map((item: any) => ({
@@ -115,6 +121,10 @@ export default function ReaderPage() {
     apiRequest("post", "/bible/passage", {
       book_name: book,
       chapter: nextChapter,
+      verse: verse,
+      searched: currentUser ? fromSearch : false,
+      phrase: phrase,
+      user_mail: currentUser ? currentUser.email : "",
     }).then((response) => {
       console.log(response.data);
       if (response.status === 200) {

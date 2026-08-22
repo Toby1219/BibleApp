@@ -40,7 +40,7 @@ export default function ProfilePage() {
         email: currentUser?.email,
         memberSince: currentUser?.created_at,
         initials: "EA",
-        stats: { bookmarks: bookmark_count, searches: search_count, streak: 9 },
+        stats: { bookmarks: bookmark_count, searches: search_count},
     };
 
     const VERSE_OF_DAY = verse_of_the_day;
@@ -63,7 +63,7 @@ export default function ProfilePage() {
 
     const handleBookmarkNav = (ref:string)=>{
         const passage_ = parseRef(ref);
-        apiRequest("post", "/bible/passage", {book_name:passage_.book, chapter:passage_.chapter, verse:passage_.verse}).then((resp)=>{
+        apiRequest("post", "/bible/passage/book", {book_name:passage_.book, chapter:passage_.chapter, verse:passage_.verse}).then((resp)=>{
             if (resp.status === 200){
                 navigate(`/bible?book=${passage_.book}&chapter=${passage_.chapter}&verse=${passage_.verse}`);
             }
@@ -72,9 +72,18 @@ export default function ProfilePage() {
 
     const handleSearchNav = (ref:string)=>{
         const passage_ = parseRef(ref);
-        apiRequest("post", "/bible/passage", {book_name:passage_.book, chapter:passage_.chapter, verse:passage_.verse}).then((resp)=>{
+        apiRequest("post", "/bible/passage/book", {book_name:passage_.book, chapter:passage_.chapter, verse:passage_.verse}).then((resp)=>{
             if (resp.status === 200){
                 navigate(`/bible?book=${passage_.book}&chapter=${passage_.chapter}&verse=${passage_.verse}`);
+            }
+        })
+    }
+
+    const handleLogout = ()=>{
+        apiRequest("post", "/auth/logout").then((resp)=>{
+            if(resp.status === 200){
+                console.log(resp.data);
+                navigate("/login")
             }
         })
     }
@@ -95,7 +104,7 @@ export default function ProfilePage() {
                     <a onClick={()=>navigate("/bible")} className="hover:text-[#7B2942] transition-colors cursor-pointer">
                         Read
                     </a>
-                    <a onClick={()=>navigate("/login")} className="text-[#7B2942] cursor-pointer">
+                    <a onClick={()=>handleLogout()} className="text-[#7B2942] cursor-pointer">
                         logout
                     </a>
                 </nav>
@@ -142,14 +151,7 @@ export default function ProfilePage() {
                                     Searches
                                 </p>
                             </div>
-                            <div>
-                                <p className="bh-display text-lg text-[#7B2942]">
-                                    {USER.stats.streak}
-                                </p>
-                                <p className="bh-mono text-[10px] uppercase text-stone-400 mt-0.5">
-                                    Day streak
-                                </p>
-                            </div>
+                            
                             <div>
                                 <p className="bh-display text-lg text-stone-700">
                                     {USER.memberSince ? new Date(USER.memberSince).toLocaleDateString() : ""}

@@ -155,10 +155,11 @@ async def refresh_token(
     token_data = {"sub": str(user.id), "username": user.username}
     new_access_token = create_access_token(token_data)
     new_refresh_token = create_refresh_token(token_data)
-    db_token.access_token = new_access_token
-    db_token.refresh_token = new_refresh_token
-    db_token.revoked = False
-    await db_token.save(update_fields=["access_token", "refresh_token", "revoked"])   
+    if db_token:
+        db_token.access_token = new_access_token
+        db_token.refresh_token = new_refresh_token
+        db_token.revoked = False
+        await db_token.save(update_fields=["access_token", "refresh_token", "revoked"])   
 
     response.set_cookie(
         key="access_token",
@@ -209,7 +210,7 @@ async def logout(request: Request, response: Response, current_user: User = Depe
     
 
 @router.get("/me", response_model=UserPrivateResponse)
-@limiter.limit("2/minute")
+@limiter.limit("5/second")
 async def get_me(request: Request, current_user: User = Depends(get_current_user)):
     
     if current_user.is_superuser:
@@ -225,7 +226,7 @@ async def get_me(request: Request, current_user: User = Depends(get_current_user
            
     search_history_book = [
         {
-            "phrase": h.pharse,
+            "phrase": h.phrase,
             "book": f"{books_by_id[h.book_id].passage.name} {books_by_id[h.book_id].chapter}:{books_by_id[h.book_id].verse}",
             "created_at": h.created_at,
         }
@@ -243,7 +244,7 @@ async def get_me(request: Request, current_user: User = Depends(get_current_user
     )
 
 @router.get("/bookmark", response_model=UserBookmarkResponse)
-@limiter.limit("2/minute")
+@limiter.limit("5/second")
 @cache(expire=600, key_builder=custom_key_builder)
 async def get_bookmarks(request: Request, current_user: User= Depends(get_current_user)):
     bookmark = await UserBookMark.filter(user=current_user).all()
@@ -268,7 +269,7 @@ async def get_bookmarks(request: Request, current_user: User= Depends(get_curren
     )
 
 @router.post("/save_bookmark", response_model=Dict)
-@limiter.limit("2/minute")
+@limiter.limit("9/minute")
 async def save_bookmark(request: Request, payload:BookMarkSchema, current_user:User=Depends(get_current_user)):
     book = await BibleContent.filter(passage__name__icontains=payload.book_name.capitalize(), 
                                      chapter = payload.chapter, verse = payload.verse | 1).prefetch_related("passage").first()

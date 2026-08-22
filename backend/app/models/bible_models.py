@@ -68,7 +68,7 @@ class BibleContent(Model):
         using_db = "bible"
 
     def __str__(self):
-        return f"{self.passage.name} {self.chapter}:{self.verse}"
+        return f"{self.passage.id} {self.chapter}:{self.verse}"
 
 
 class DailyVerse(Model):
