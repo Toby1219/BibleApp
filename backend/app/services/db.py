@@ -26,17 +26,6 @@ TORTOISE_ORM = {
 
 
 def init_db(app):
-    # You can use this (not flexible)
-    # register_tortoise(
-    #     app,
-    #     db_url=DB_URL,
-    #     modules={"models": ["app.models"]},
-    #     generate_schemas=True,
-    #     add_exception_handlers=True,
-    # )
-    # OR
-    #
-    # Use this (flexible)
     register_tortoise(
         app,
         config=TORTOISE_ORM,
