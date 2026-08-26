@@ -14,5 +14,7 @@ wheels/
 uv.lock
 pyproject.toml
 search_engine/target/
+search_engine/.env
+.env
 
 .pytest_cache
