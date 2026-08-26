@@ -1,6 +1,6 @@
 services:
   api:
-    build: 
+    build:
       context: ./backend
     env_file:
       - ./backend/.env
@@ -13,9 +13,9 @@ services:
       - "8000:8000"
     networks:
       - folio-net
-  
+
   web:
-    build: 
+    build:
       context: ./frontend
     depends_on:
       - api
@@ -23,9 +23,9 @@ services:
       - "8080:8080"
     networks:
       - folio-net
-    
+
   search:
-    build: 
+    build:
       context: ./search_engine
     env_file:
       - ./search_engine/.env
@@ -53,16 +53,15 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./db/01-init-multiple-dbs.sh:/docker-entrypoint-initdb.d/01-init-multiple-dbs.sh
-      - ./db/02-init.sql:/docker-entrypoint-initdb.d/02-init.sql
+      - ./db/02-init.sh:/docker-entrypoint-initdb.d/02-init.sh
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
     networks:
       - folio-net
-  
+
   redis:
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -72,7 +71,7 @@ services:
     volumes:
       - redis-data:/data
     networks:
-      - folio-net 
+      - folio-net
 
 volumes:
   pgdata:

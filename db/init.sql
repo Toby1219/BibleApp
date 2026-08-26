@@ -3,7 +3,6 @@
 --
 
 \restrict d5ZBVikhoXOcYj6oNtPYzluLUev1rWS7bKNfvP8Q766OVpa0xqfBdAPFQOJSFd8
-\c bible_db
 
 -- Dumped from database version 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)
 -- Dumped by pg_dump version 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)
@@ -46,20 +45,20 @@ DROP SEQUENCE IF EXISTS public.bible_books_id_seq;
 DROP TABLE IF EXISTS public.bible_books;
 -- *not* dropping schema, since initdb creates it
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: toby_user
+-- Name: public; Type: SCHEMA; Schema: -; Owner: folio_user
 --
 
 -- *not* creating schema, since initdb creates it
 
 
-ALTER SCHEMA public OWNER TO toby_user;
+ALTER SCHEMA public OWNER TO folio_user;
 
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
 --
--- Name: bible_books; Type: TABLE; Schema: public; Owner: toby_user
+-- Name: bible_books; Type: TABLE; Schema: public; Owner: folio_user
 --
 
 CREATE TABLE public.bible_books (
@@ -74,10 +73,10 @@ CREATE TABLE public.bible_books (
 );
 
 
-ALTER TABLE public.bible_books OWNER TO toby_user;
+ALTER TABLE public.bible_books OWNER TO folio_user;
 
 --
--- Name: bible_books_id_seq; Type: SEQUENCE; Schema: public; Owner: toby_user
+-- Name: bible_books_id_seq; Type: SEQUENCE; Schema: public; Owner: folio_user
 --
 
 CREATE SEQUENCE public.bible_books_id_seq
@@ -89,17 +88,17 @@ CREATE SEQUENCE public.bible_books_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.bible_books_id_seq OWNER TO toby_user;
+ALTER SEQUENCE public.bible_books_id_seq OWNER TO folio_user;
 
 --
--- Name: bible_books_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: toby_user
+-- Name: bible_books_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: folio_user
 --
 
 ALTER SEQUENCE public.bible_books_id_seq OWNED BY public.bible_books.id;
 
 
 --
--- Name: bible_content; Type: TABLE; Schema: public; Owner: toby_user
+-- Name: bible_content; Type: TABLE; Schema: public; Owner: folio_user
 --
 
 CREATE TABLE public.bible_content (
@@ -113,10 +112,10 @@ CREATE TABLE public.bible_content (
 );
 
 
-ALTER TABLE public.bible_content OWNER TO toby_user;
+ALTER TABLE public.bible_content OWNER TO folio_user;
 
 --
--- Name: bible_content_id_seq; Type: SEQUENCE; Schema: public; Owner: toby_user
+-- Name: bible_content_id_seq; Type: SEQUENCE; Schema: public; Owner: folio_user
 --
 
 CREATE SEQUENCE public.bible_content_id_seq
@@ -128,17 +127,17 @@ CREATE SEQUENCE public.bible_content_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.bible_content_id_seq OWNER TO toby_user;
+ALTER SEQUENCE public.bible_content_id_seq OWNER TO folio_user;
 
 --
--- Name: bible_content_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: toby_user
+-- Name: bible_content_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: folio_user
 --
 
 ALTER SEQUENCE public.bible_content_id_seq OWNED BY public.bible_content.id;
 
 
 --
--- Name: bible_testaments; Type: TABLE; Schema: public; Owner: toby_user
+-- Name: bible_testaments; Type: TABLE; Schema: public; Owner: folio_user
 --
 
 CREATE TABLE public.bible_testaments (
@@ -148,10 +147,10 @@ CREATE TABLE public.bible_testaments (
 );
 
 
-ALTER TABLE public.bible_testaments OWNER TO toby_user;
+ALTER TABLE public.bible_testaments OWNER TO folio_user;
 
 --
--- Name: bible_testaments_id_seq; Type: SEQUENCE; Schema: public; Owner: toby_user
+-- Name: bible_testaments_id_seq; Type: SEQUENCE; Schema: public; Owner: folio_user
 --
 
 CREATE SEQUENCE public.bible_testaments_id_seq
@@ -163,17 +162,17 @@ CREATE SEQUENCE public.bible_testaments_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.bible_testaments_id_seq OWNER TO toby_user;
+ALTER SEQUENCE public.bible_testaments_id_seq OWNER TO folio_user;
 
 --
--- Name: bible_testaments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: toby_user
+-- Name: bible_testaments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: folio_user
 --
 
 ALTER SEQUENCE public.bible_testaments_id_seq OWNED BY public.bible_testaments.id;
 
 
 --
--- Name: bible_versions; Type: TABLE; Schema: public; Owner: toby_user
+-- Name: bible_versions; Type: TABLE; Schema: public; Owner: folio_user
 --
 
 CREATE TABLE public.bible_versions (
@@ -183,10 +182,10 @@ CREATE TABLE public.bible_versions (
 );
 
 
-ALTER TABLE public.bible_versions OWNER TO toby_user;
+ALTER TABLE public.bible_versions OWNER TO folio_user;
 
 --
--- Name: bible_versions_id_seq; Type: SEQUENCE; Schema: public; Owner: toby_user
+-- Name: bible_versions_id_seq; Type: SEQUENCE; Schema: public; Owner: folio_user
 --
 
 CREATE SEQUENCE public.bible_versions_id_seq
@@ -198,17 +197,17 @@ CREATE SEQUENCE public.bible_versions_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.bible_versions_id_seq OWNER TO toby_user;
+ALTER SEQUENCE public.bible_versions_id_seq OWNER TO folio_user;
 
 --
--- Name: bible_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: toby_user
+-- Name: bible_versions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: folio_user
 --
 
 ALTER SEQUENCE public.bible_versions_id_seq OWNED BY public.bible_versions.id;
 
 
 --
--- Name: daily_verse; Type: TABLE; Schema: public; Owner: toby_user
+-- Name: daily_verse; Type: TABLE; Schema: public; Owner: folio_user
 --
 
 CREATE TABLE public.daily_verse (
@@ -218,10 +217,10 @@ CREATE TABLE public.daily_verse (
 );
 
 
-ALTER TABLE public.daily_verse OWNER TO toby_user;
+ALTER TABLE public.daily_verse OWNER TO folio_user;
 
 --
--- Name: dailyverse_id_seq; Type: SEQUENCE; Schema: public; Owner: toby_user
+-- Name: dailyverse_id_seq; Type: SEQUENCE; Schema: public; Owner: folio_user
 --
 
 CREATE SEQUENCE public.dailyverse_id_seq
@@ -233,52 +232,52 @@ CREATE SEQUENCE public.dailyverse_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.dailyverse_id_seq OWNER TO toby_user;
+ALTER SEQUENCE public.dailyverse_id_seq OWNER TO folio_user;
 
 --
--- Name: dailyverse_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: toby_user
+-- Name: dailyverse_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: folio_user
 --
 
 ALTER SEQUENCE public.dailyverse_id_seq OWNED BY public.daily_verse.id;
 
 
 --
--- Name: bible_books id; Type: DEFAULT; Schema: public; Owner: toby_user
+-- Name: bible_books id; Type: DEFAULT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.bible_books ALTER COLUMN id SET DEFAULT nextval('public.bible_books_id_seq'::regclass);
 
 
 --
--- Name: bible_content id; Type: DEFAULT; Schema: public; Owner: toby_user
+-- Name: bible_content id; Type: DEFAULT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.bible_content ALTER COLUMN id SET DEFAULT nextval('public.bible_content_id_seq'::regclass);
 
 
 --
--- Name: bible_testaments id; Type: DEFAULT; Schema: public; Owner: toby_user
+-- Name: bible_testaments id; Type: DEFAULT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.bible_testaments ALTER COLUMN id SET DEFAULT nextval('public.bible_testaments_id_seq'::regclass);
 
 
 --
--- Name: bible_versions id; Type: DEFAULT; Schema: public; Owner: toby_user
+-- Name: bible_versions id; Type: DEFAULT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.bible_versions ALTER COLUMN id SET DEFAULT nextval('public.bible_versions_id_seq'::regclass);
 
 
 --
--- Name: daily_verse id; Type: DEFAULT; Schema: public; Owner: toby_user
+-- Name: daily_verse id; Type: DEFAULT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.daily_verse ALTER COLUMN id SET DEFAULT nextval('public.dailyverse_id_seq'::regclass);
 
 
 --
--- Data for Name: bible_books; Type: TABLE DATA; Schema: public; Owner: toby_user
+-- Data for Name: bible_books; Type: TABLE DATA; Schema: public; Owner: folio_user
 --
 
 COPY public.bible_books (id, name, author, date, genre, chapters, summary, testament_id) FROM stdin;
@@ -352,7 +351,7 @@ COPY public.bible_books (id, name, author, date, genre, chapters, summary, testa
 
 
 --
--- Data for Name: bible_content; Type: TABLE DATA; Schema: public; Owner: toby_user
+-- Data for Name: bible_content; Type: TABLE DATA; Schema: public; Owner: folio_user
 --
 
 COPY public.bible_content (id, heading, chapter, verse, text, passage_id, version_id) FROM stdin;
@@ -31487,7 +31486,7 @@ COPY public.bible_content (id, heading, chapter, verse, text, passage_id, versio
 
 
 --
--- Data for Name: bible_testaments; Type: TABLE DATA; Schema: public; Owner: toby_user
+-- Data for Name: bible_testaments; Type: TABLE DATA; Schema: public; Owner: folio_user
 --
 
 COPY public.bible_testaments (id, name, short_name) FROM stdin;
@@ -31497,7 +31496,7 @@ COPY public.bible_testaments (id, name, short_name) FROM stdin;
 
 
 --
--- Data for Name: bible_versions; Type: TABLE DATA; Schema: public; Owner: toby_user
+-- Data for Name: bible_versions; Type: TABLE DATA; Schema: public; Owner: folio_user
 --
 
 COPY public.bible_versions (id, name, short_name) FROM stdin;
@@ -31506,7 +31505,7 @@ COPY public.bible_versions (id, name, short_name) FROM stdin;
 
 
 --
--- Data for Name: daily_verse; Type: TABLE DATA; Schema: public; Owner: toby_user
+-- Data for Name: daily_verse; Type: TABLE DATA; Schema: public; Owner: folio_user
 --
 
 COPY public.daily_verse (id, created_at, book_id) FROM stdin;
@@ -31525,42 +31524,42 @@ COPY public.daily_verse (id, created_at, book_id) FROM stdin;
 
 
 --
--- Name: bible_books_id_seq; Type: SEQUENCE SET; Schema: public; Owner: toby_user
+-- Name: bible_books_id_seq; Type: SEQUENCE SET; Schema: public; Owner: folio_user
 --
 
 SELECT pg_catalog.setval('public.bible_books_id_seq', 66, true);
 
 
 --
--- Name: bible_content_id_seq; Type: SEQUENCE SET; Schema: public; Owner: toby_user
+-- Name: bible_content_id_seq; Type: SEQUENCE SET; Schema: public; Owner: folio_user
 --
 
 SELECT pg_catalog.setval('public.bible_content_id_seq', 32979, true);
 
 
 --
--- Name: bible_testaments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: toby_user
+-- Name: bible_testaments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: folio_user
 --
 
 SELECT pg_catalog.setval('public.bible_testaments_id_seq', 2, true);
 
 
 --
--- Name: bible_versions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: toby_user
+-- Name: bible_versions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: folio_user
 --
 
 SELECT pg_catalog.setval('public.bible_versions_id_seq', 22, true);
 
 
 --
--- Name: dailyverse_id_seq; Type: SEQUENCE SET; Schema: public; Owner: toby_user
+-- Name: dailyverse_id_seq; Type: SEQUENCE SET; Schema: public; Owner: folio_user
 --
 
 SELECT pg_catalog.setval('public.dailyverse_id_seq', 11, true);
 
 
 --
--- Name: bible_books bible_books_name_key; Type: CONSTRAINT; Schema: public; Owner: toby_user
+-- Name: bible_books bible_books_name_key; Type: CONSTRAINT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.bible_books
@@ -31568,7 +31567,7 @@ ALTER TABLE ONLY public.bible_books
 
 
 --
--- Name: bible_books bible_books_pkey; Type: CONSTRAINT; Schema: public; Owner: toby_user
+-- Name: bible_books bible_books_pkey; Type: CONSTRAINT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.bible_books
@@ -31576,7 +31575,7 @@ ALTER TABLE ONLY public.bible_books
 
 
 --
--- Name: bible_content bible_content_pkey; Type: CONSTRAINT; Schema: public; Owner: toby_user
+-- Name: bible_content bible_content_pkey; Type: CONSTRAINT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.bible_content
@@ -31584,7 +31583,7 @@ ALTER TABLE ONLY public.bible_content
 
 
 --
--- Name: bible_testaments bible_testaments_pkey; Type: CONSTRAINT; Schema: public; Owner: toby_user
+-- Name: bible_testaments bible_testaments_pkey; Type: CONSTRAINT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.bible_testaments
@@ -31592,7 +31591,7 @@ ALTER TABLE ONLY public.bible_testaments
 
 
 --
--- Name: bible_versions bible_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: toby_user
+-- Name: bible_versions bible_versions_pkey; Type: CONSTRAINT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.bible_versions
@@ -31600,7 +31599,7 @@ ALTER TABLE ONLY public.bible_versions
 
 
 --
--- Name: daily_verse dailyverse_pkey; Type: CONSTRAINT; Schema: public; Owner: toby_user
+-- Name: daily_verse dailyverse_pkey; Type: CONSTRAINT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.daily_verse
@@ -31608,7 +31607,7 @@ ALTER TABLE ONLY public.daily_verse
 
 
 --
--- Name: bible_books bible_books_testament_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: toby_user
+-- Name: bible_books bible_books_testament_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.bible_books
@@ -31616,7 +31615,7 @@ ALTER TABLE ONLY public.bible_books
 
 
 --
--- Name: bible_content bible_content_passage_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: toby_user
+-- Name: bible_content bible_content_passage_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.bible_content
@@ -31624,7 +31623,7 @@ ALTER TABLE ONLY public.bible_content
 
 
 --
--- Name: bible_content bible_content_version_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: toby_user
+-- Name: bible_content bible_content_version_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.bible_content
@@ -31632,7 +31631,7 @@ ALTER TABLE ONLY public.bible_content
 
 
 --
--- Name: daily_verse dailyverse_book_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: toby_user
+-- Name: daily_verse dailyverse_book_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: folio_user
 --
 
 ALTER TABLE ONLY public.daily_verse
