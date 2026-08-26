@@ -11,8 +11,6 @@ wheels/
 
 .vscode
 .venv
-.env
-search_engine/.env
 uv.lock
 pyproject.toml
 search_engine/target/

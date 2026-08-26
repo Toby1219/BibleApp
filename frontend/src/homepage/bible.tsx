@@ -126,7 +126,6 @@ export default function ReaderPage() {
       phrase: phrase,
       user_mail: currentUser ? currentUser.email : "",
     }).then((response) => {
-      console.log(response.data);
       if (response.status === 200) {
         const data = response.data;
         const newVerse = data.data.map((item: any) => ({
@@ -139,7 +138,7 @@ export default function ReaderPage() {
         setVerseTexts([...newVerse]);
         setBook(searchParams.get("book"));
         setChapter(nextChapter);
-        setVerse(searchParams.get("verse"));
+        setVerse("1");
 
         navigate(`/bible?book=${book}&chapter=${nextChapter}&verse=${verse}`);
       }

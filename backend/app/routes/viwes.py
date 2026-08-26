@@ -23,7 +23,7 @@ from ..utils.limiter import limiter
 view_router = APIRouter()
 
 @view_router.get("/all", response_model=Dict)
-@limiter.limit("5/minute")
+@limiter.limit("10/minute")
 @cache(expire=600, key_builder=custom_key_builder)
 async def get_all_books(request: Request):
     bible_book = await BibleBook.all().prefetch_related("testament")
@@ -44,7 +44,7 @@ async def get_all_books(request: Request):
 
 
 @view_router.post("/all", response_model=Dict)
-@limiter.limit("5/minute")
+@limiter.limit("10/minute")
 async def all_books_testament(request: Request, payload: TestamentQuery):
     bible_testament = payload.testament if payload.testament else "OT"
     bible_book = (
@@ -73,7 +73,7 @@ async def all_books_testament(request: Request, payload: TestamentQuery):
 
 
 @view_router.post("/passage", response_model=Dict)
-@limiter.limit("5/minute")
+@limiter.limit("10/minute")
 async def get_biblesPassage(request: Request, payload: BibleBookQuery):
     bible_books = (
         await BibleContent.filter(
@@ -119,7 +119,7 @@ async def get_biblesPassage(request: Request, payload: BibleBookQuery):
 
 
 @view_router.post("/passage/book", response_model=Dict)
-@limiter.limit("5/minute")
+@limiter.limit("10/minute")
 async def get_single_book(request: Request, payload: SingleBibleBookQuery):
     bible_books = (
         await BibleContent.filter(
@@ -149,7 +149,7 @@ async def get_single_book(request: Request, payload: SingleBibleBookQuery):
     }
 
 @view_router.get("/day-verse", response_model=DailverseResponse)
-@limiter.limit("5/minute")
+@limiter.limit("10/minute")
 @cache(expire=600, key_builder=custom_key_builder)
 async def get_daily_verse(request: Request):
     day_verse = None
@@ -171,7 +171,7 @@ async def get_daily_verse(request: Request):
     return DailverseResponse(book=f"{day_verse.passage.name} {day_verse.chapter}:{day_verse.verse}", text=day_verse.text)
 
 @view_router.get("/book-count", response_model=Dict)
-@limiter.limit("5/minute")
+@limiter.limit("10/minute")
 @cache(expire=600, key_builder=custom_key_builder)
 async def get_books_count(request: Request):
     books = await BibleBook.all()
@@ -179,7 +179,7 @@ async def get_books_count(request: Request):
     return data
 
 @view_router.get("/verse-count", response_model=Dict)
-@limiter.limit("5/minute")
+@limiter.limit("10/minute")
 @cache(expire=600, key_builder=custom_key_builder)
 async def get_book_verse(request: Request, book:str, chapter:int):
     passage = await BibleBook.filter(name__icontains=book.capitalize()).first()
@@ -193,7 +193,7 @@ async def get_book_verse(request: Request, book:str, chapter:int):
 
 
 @view_router.get("/search", response_model=list[Dict])
-@limiter.limit("5/minute")
+@limiter.limit("10/minute")
 async def search(request: Request, q: str, limit: int = 20):
     try:
         results = await search_bible(q, limit)

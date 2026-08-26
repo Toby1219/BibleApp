@@ -82,7 +82,6 @@ export default function ProfilePage() {
     const handleLogout = ()=>{
         apiRequest("post", "/auth/logout").then((resp)=>{
             if(resp.status === 200){
-                console.log(resp.data);
                 navigate("/login")
             }
         })

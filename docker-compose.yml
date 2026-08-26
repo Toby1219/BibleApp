@@ -32,6 +32,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       - ./search_engine/bible_index:/search_engine/bible_index
     ports:
@@ -46,7 +48,7 @@ services:
     environment:
       - POSTGRES_DB=auth_db
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d auth_db"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -54,7 +56,7 @@ services:
       - pgdata:/var/lib/postgresql/data
       - ./db/01-init-multiple-dbs.sh:/docker-entrypoint-initdb.d/01-init-multiple-dbs.sh
       - ./db/02-init.sh:/docker-entrypoint-initdb.d/02-init.sh
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/sql/init.sql
     ports:
       - "5432:5432"
     networks:

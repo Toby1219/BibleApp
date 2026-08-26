@@ -28,7 +28,7 @@ async fn main() -> std::io::Result<()> {
         .expect("failed to build index reader");
 
     // --- Redis cache, same as your existing setup ---
-    let redis_url = std::env::var("REDIS_URL").unwrap_or_else(|_| "redis://127.0.0.1/".into());
+    let redis_url = std::env::var("REDIS_URL").expect("Invalid redis url ... ");
     let cache = SearchCache::connect(&redis_url)
         .await
         .expect("failed to connect to Redis");
@@ -39,7 +39,7 @@ async fn main() -> std::io::Result<()> {
         schema: bible_schema,
         cache,
     });
-
+    let bind_address = "0.0.0.0"; // "127.0.0.1";
     log::info!("starting server on 127.0.0.1:8081");
 
     HttpServer::new(move || {
@@ -48,7 +48,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(state.clone())
             .route("/search", web::get().to(search))
     })
-    .bind(("127.0.0.1", 8081))?
+    .bind((bind_address, 8081))?
     .run()
     .await
 }

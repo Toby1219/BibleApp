@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     RUST_SEARCH_URL: str
     FRONTEND_URL: str
+    REDIS_URL: str
 
     class Config:
         env_file = ".env"

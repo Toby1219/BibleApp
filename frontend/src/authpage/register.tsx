@@ -29,7 +29,6 @@ export default function SignupPage() {
             }
             
         }catch (err: any){
-            console.log(err.response);
             setIsError(true);
             setErrormsg(err.response.data.detail);
         }
