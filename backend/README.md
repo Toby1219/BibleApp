@@ -1,105 +1,50 @@
+# </> Backend
 
-# 📖 Bible_webapp
-
-> High-performance scripture ingestion, hybrid rust (tantivy) search engine, and API web application.
+> FastAPI application serving core REST routes  
 
 ![Python](https://img.shields.io/badge/Python-v3.12-3776AB?style=flat-square&logo=python&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
-![Rust](https://img.shields.io/badge/Rust-Search_Engine-000000?style=flat-square&logo=rust&logoColor=white)
-![Package Manager](https://img.shields.io/badge/uv-managed-8A2BE2?style=flat-square)
-
----
-
-## 📌 Overview
-
-**`Bible_webapp`** is an end-to-end platform for indexing, and serving scripture texts with low-latency search capabilities. It combines a **Python/FastAPI** backend for ORM data modeling and REST API endpoints with a specialized **Rust** microservice for high-speed lexical and vector search indexing.
-
----
 
 ## 🗂️ Folder Structure
 ```bash
-bible_webapp/
+backend/
 |
-├── backend (Python fastApi)
-│   ├── app
-│   │   ├── core
-│   │   ├── models
-│   │   ├── routes
-│   │   ├── schemas
-│   │   ├── services
-│   │   └── utils
-│   ├── migrations
-│   │   ├── auth_models
-│   │   └── bible_models
-│   └── test
-├── frontend (React js)
-│   ├── public
-│   └── src
-│       ├── assets
-│       ├── authpage
-│       └── homepage
-└── search_engine
-    ├── bible_index
-    └── src
-        ├── bin
-        ├── entity
-        └── handlers
+├── app
+│   ├── config.py # configure .env file 
+│   ├── core
+│   │   ├── dependencies.py # Validate of tokens from cookies and get the current user if authenticated
+│   │   ├── __init__.py
+│   │   └── security.py # Hasshing of password and creation of JWT token
+│   ├── models
+│   │   ├── bible_models.py # Bible model where bible contnent live 
+│   │   ├── __init__.py
+│   │   └── models.py # Model for all authentication data 
+│   ├── routes
+│   │   ├── auth.py # Register, login, refresh, logout route all define here
+│   │   ├── __init__.py
+│   │   └── viwes.py # All bible content request e.g daily verse, all bible content etc
+│   ├── schemas
+│   │   ├── __init__.py
+│   │   └── schema.py # Pydantic schemas for response and request
+│   ├── services
+│   │   ├── db.py # Database connection, aerich for migration, and models
+│   │   └── __init__.py
+│   └── utils
+│       └── rust_search.py # Function to call rust actix-web api
+├── main.py # Fast api entrypoint 
+├── migrate.txt # helper note on how to use aerich migraion
+├── migrations # migrations scripts for auth model and bible_models
+│   ├── auth_models
+│   │   ├── 0_20260703215527_init.py
+│   │   ├── 1_20260704163348_update.py
+│   │   ├── 2_20260719104429_update.py
+│   │   ├── 3_20260719111320_update.py
+│   │   └── 4_20260719114559_update.py
+│   └── bible_models
+│       ├── 0_20260703215612_init.py
+│       ├── 1_20260719202744_update_bible_schema.py
+│       └── 2_20260719205954_update_bible_schema.py
+├── pyproject.toml
+├── ReadMe.md
+└── test
+    └── test.py # pytest to test all routes
 ```
-
-## 🛠️ Key Features
-
-| Service | Description | Tech Stack | Type | Status |
-| :--- | :--- | :--- | :---: | :---: |
-| **API Backend** | FastAPI application serving core REST routes | Python 3.12, FastAPI | 🌐 REST Service | ![Active](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square) |
-| **Frontend** | React, Tailwind CSS UI | React JS, Tailwind CSS| 💻 UI | ![Active](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square) |
-| **Rust (actix-web)** | Hybrid semantic search powered by rust tantivy and served through actix-web | Rust, Actix Web, Tantivy | 🔍 Microservice | ![Active](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square) |
-
----
-
-
-
-## 🚀 Quick Start
-
-### Prerequisites
-* Python `^3.12`
-* `uv` package manager
-
-* Rust `^1.96.0`
-
-* npm `^11.13.0`
-
-### Installation
-
-1. **Clone the repository:**
-```bash
-   git clone [https://github.com/username/project-name.git](https://github.com/username/project-name.git)
-   cd project-name
-```
-
-2. **Install python packages:**
-```bash
-    # Initialize uv project & environment
-    uv init .
-    source .venv/bin/activate
-
-    # Install dependencies
-    uv pip install -r requirement.txt
-
-    # Run FastAPI server
-    cd backend
-    uvicorn main:app --reload
-```
-
-3. **Setup Rust:**
-```bash
-    cd search_engine
-    cargo build --release
-    cargo run --release
-```
-
----
-
-
-### Docker Installation
-
-
