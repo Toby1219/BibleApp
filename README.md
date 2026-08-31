@@ -99,4 +99,17 @@ bible_webapp/
 
 ### Docker Installation
 
+> To lunch docker app with sample bible data 
+
+1. **Build docker images**
+```bash
+docker compose up -d
+```
+
+2. **Open browser to test the docker app**
+```bash
+ # In your browser enter localhost:8080 OR 127.0.0.1:8080
+```
+
+
 
