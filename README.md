@@ -47,8 +47,7 @@ Browser ──► React app ──► FastAPI (:8000) ──► PostgreSQL  (aut
                                                         └────────────────────► Redis (result cache)
 ```
 
-The browser only talks to FastAPI. FastAPI forwards `/bible/search` to the Rust service. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for details.
-
+The browser only talks to FastAPI. FastAPI forwards `/bible/search` to the Rust service.
 ---
 
 ## 🗂️ Folder Structure
