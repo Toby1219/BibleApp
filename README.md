@@ -48,6 +48,7 @@ Browser ──► React app ──► FastAPI (:8000) ──► PostgreSQL  (aut
 ```
 
 The browser only talks to FastAPI. FastAPI forwards `/bible/search` to the Rust service.
+
 ---
 
 ## 🗂️ Folder Structure
