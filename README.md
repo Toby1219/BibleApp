@@ -187,22 +187,13 @@ Defaults in code: JWT algorithm `HS256`, access token 30 min, refresh token 7 da
 | `REDIS_URL` | result cache (required by the server) |
 | `DATABASE_URL` | `bible_db` URL, used only by the `index_bible` tool |
 
-> ⚠️ Don't commit real secrets. Use `.env.example` files and add `.env` to `.gitignore` (see [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md)).
-
 ---
 
 ## 🧪 Tests
 
 ```bash
 cd backend                      # FastAPI project root
-uv run pytest test/test.py      # run the route tests (they currently accept almost any status code; see KNOWN_ISSUES)
+uv run pytest test/test.py      # run the route tests
 ```
 
 ---
-
-## 📚 More documentation
-
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): components, request flows, data model, search internals
-- [`docs/API.md`](docs/API.md): every endpoint of the FastAPI backend and the search service
-- [`docs/KNOWN_ISSUES.md`](docs/KNOWN_ISSUES.md): bugs and risks found while reading the code
-- Per-folder notes: [`backend/`](backend/README.md), [`frontend/`](frontend/README.md), [`search_engine/`](search_engine/README.MD)
