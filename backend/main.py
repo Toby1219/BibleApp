@@ -6,7 +6,7 @@ from app.services.db import init_db
 from app.utils.cache import caching
 from app.routes.auth import router as auth_route
 from app.utils.limiter import limiter
-from app.routes.viwes import view_router as view_routes
+from backend.app.routes.views import view_router as view_routes
 from dotenv import load_dotenv
 import os
 

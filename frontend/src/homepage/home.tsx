@@ -179,7 +179,7 @@ export default function BibleHomepage() {
         verse: number = 1,
     ) => {
         apiRequest("post", "/bible/passage/book", {
-            bible: bible,
+            book_name: bible,
             chapter: chapter,
             verse: verse,
         });

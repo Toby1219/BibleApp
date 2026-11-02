@@ -105,7 +105,7 @@ export default function SearchResults() {
 
     const handleResultClick = (result: SearchResult) => {
         // apiRequest("post", "/bible/passage/book", {
-        //     bible: result.book,
+        //     book_name: result.book,
         //     chapter: result.chapter,
         //     verse: result.verse,
         // });
