@@ -29,6 +29,6 @@ def init_db(app):
     register_tortoise(
         app,
         config=TORTOISE_ORM,
-        generate_schemas=False,
+        generate_schemas=True,
         add_exception_handlers=True,
     )

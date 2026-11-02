@@ -22,6 +22,7 @@ from ..utils.limiter import limiter
 
 view_router = APIRouter()
 
+
 @view_router.get("/all", response_model=Dict)
 @limiter.limit("10/minute")
 @cache(expire=600, key_builder=custom_key_builder)
@@ -84,26 +85,34 @@ async def get_biblesPassage(request: Request, payload: BibleBookQuery):
         .order_by("chapter", "verse")
         .all()
     )
-    passage_testament = await BibleBook.filter(name=bible_books[0].passage.name).prefetch_related("testament").first() if bible_books else ""
+    passage_testament = (
+        await BibleBook.filter(name=bible_books[0].passage.name)
+        .prefetch_related("testament")
+        .first()
+        if bible_books
+        else ""
+    )
     if payload.searched and payload.user_mail:
         u = await User.filter(email=payload.user_mail).first()
         target_book = await BibleContent.filter(
             id__in=[b.id for b in bible_books],
             passage__name=payload.book_name.capitalize(),
             chapter=payload.chapter,
-            verse=payload.verse
+            verse=payload.verse,
         ).first()
-        
+
         saved_search = await SearchHistory.filter(book_id=bible_books[0].id).first()
         if not saved_search and target_book:
-            search = await SearchHistory.create(user=u, phrase=payload.phrase, book=target_book)
+            search = await SearchHistory.create(
+                user=u, phrase=payload.phrase, book=target_book
+            )
             await search.save()
-    
+
     return {
         "total_chapters": bible_books[0].passage.chapters if bible_books else 0,
         "total_count": len(bible_books),
-        "testament":passage_testament.testament.name,
-        "short_testment":passage_testament.testament.short_name,
+        "testament": passage_testament.testament.name,
+        "short_testment": passage_testament.testament.short_name,
         "heading": bible_books[0].heading,
         "data": [
             BiblePassage(
@@ -123,9 +132,9 @@ async def get_biblesPassage(request: Request, payload: BibleBookQuery):
 async def get_single_book(request: Request, payload: SingleBibleBookQuery):
     bible_books = (
         await BibleContent.filter(
-            passage__name__icontains=payload.book_name.capitalize(), 
-            chapter = payload.chapter,
-            verse = payload.verse,
+            passage__name__icontains=payload.book_name.capitalize(),
+            chapter=payload.chapter,
+            verse=payload.verse,
         )
         .prefetch_related("passage", "version")
         .order_by("chapter", "verse")
@@ -148,6 +157,7 @@ async def get_single_book(request: Request, payload: SingleBibleBookQuery):
         ],
     }
 
+
 @view_router.get("/day-verse", response_model=DailverseResponse)
 @limiter.limit("10/minute")
 @cache(expire=600, key_builder=custom_key_builder)
@@ -156,8 +166,10 @@ async def get_daily_verse(request: Request):
     now = datetime.now(timezone.utc) - timedelta(hours=24)
     d_verse = await DailyVerse.filter(created_at__gt=now).latest("created_at")
     if d_verse:
-        day_verse = await BibleContent.get(id=d_verse.book_id).prefetch_related("passage")
-    else:       
+        day_verse = await BibleContent.get(id=d_verse.book_id).prefetch_related(
+            "passage"
+        )
+    else:
         total = await BibleContent.all().count()
         day_verse = (
             await BibleContent.all()
@@ -167,28 +179,41 @@ async def get_daily_verse(request: Request):
             .first()
         )
         d_v = await DailyVerse.create(book=day_verse)
-        d_v.save()
-    return DailverseResponse(book=f"{day_verse.passage.name} {day_verse.chapter}:{day_verse.verse}", text=day_verse.text)
+        await d_v.save()
+    return DailverseResponse(
+        book=f"{day_verse.passage.name} {day_verse.chapter}:{day_verse.verse}",
+        text=day_verse.text,
+    )
+
 
 @view_router.get("/book-count", response_model=Dict)
 @limiter.limit("10/minute")
 @cache(expire=600, key_builder=custom_key_builder)
 async def get_books_count(request: Request):
     books = await BibleBook.all()
-    data = {book.name:book.chapters for book in books}
+    data = {book.name: book.chapters for book in books}
     return data
+
 
 @view_router.get("/verse-count", response_model=Dict)
 @limiter.limit("10/minute")
 @cache(expire=600, key_builder=custom_key_builder)
-async def get_book_verse(request: Request, book:str, chapter:int):
+async def get_book_verse(request: Request, book: str, chapter: int):
     passage = await BibleBook.filter(name__icontains=book.capitalize()).first()
     if not passage:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Book does not exist")
-    book_content = await BibleContent.filter(passage=passage.id, chapter=chapter).prefetch_related("passage").all()
+    book_content = (
+        await BibleContent.filter(passage=passage.id, chapter=chapter)
+        .prefetch_related("passage")
+        .all()
+    )
     if not book_content:
         raise HTTPException(status.HTTP_404_NOT_FOUND, "Book content does not exit")
-    data = {"book": book_content[0].passage.name, "chapter": book_content[0].chapter, "verse": len(book_content)}
+    data = {
+        "book": book_content[0].passage.name,
+        "chapter": book_content[0].chapter,
+        "verse": len(book_content),
+    }
     return data
 
 
@@ -198,8 +223,12 @@ async def search(request: Request, q: str, limit: int = 20):
     try:
         results = await search_bible(q, limit)
     except httpx.HTTPStatusError as e:
-        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=f"search service error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY, detail=f"search service error: {e}"
+        )
     except httpx.RequestError as e:
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=f"search service unavailable: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"search service unavailable: {e}",
+        )
     return results
-

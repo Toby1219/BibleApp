@@ -27,7 +27,7 @@ api.interceptors.response.use(
             originalRequest._retry = true;
 
             try {
-                await refreshApi.post(REFRESH_URL); // <-- no interceptor loop possible
+                await refreshApi.post(REFRESH_URL);
                 return api(originalRequest);
             } catch (err) {
                 // window.location.href = "/login";

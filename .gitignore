@@ -8,9 +8,9 @@ build/
 dist/
 wheels/
 *.egg-info
-
-.vscode
-.venv
+*.env
+*.vscode
+*.venv
 uv.lock
 pyproject.toml
 search_engine/target/
