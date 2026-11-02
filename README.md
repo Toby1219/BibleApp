@@ -154,13 +154,61 @@ cargo run --release --bin index_bible     # read verses via DATABASE_URL and wri
 **5. Frontend** (new terminal)
 
 ```bash
-docker compose up -d
+cd frontend       # React project root
+npm ci            # install exact dependency versions from package-lock.json
+npm run dev       # start Vite on http://localhost:5173
 ```
 
-2. **Open browser to test the docker app**
+The frontend calls the API at `http://localhost:8000` (hard-coded in `frontend/src/axiosinit.tsx`).
+
+---
+
+## ⚙️ Configuration
+
+**Root `.env`** (used by the `db` container): `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`. Compose overrides the database name to `auth_db`.
+
+**`backend/.env`** (all required)
+
+| Variable | Example (Docker) | Meaning |
+| :--- | :--- | :--- |
+| `AUTH_BIBLE_DB_URL` | `postgresql://user:pass@db:5432/auth_db` | users, tokens, bookmarks, search history |
+| `BIBLE_DB_URL` | `postgresql://user:pass@db:5432/bible_db` | Bible text |
+| `REDIS_URL` | `redis://redis:6379/0` | cache + rate-limit storage |
+| `SECRET_KEY` | long random string | signs JWTs |
+| `RUST_SEARCH_URL` | `http://search:8081` | search service (`http://127.0.0.1:8081` locally) |
+| `FRONTEND_URL` | `http://localhost:8080` | allowed CORS origin (`http://localhost:5173` for Vite dev) |
+
+Defaults in code: JWT algorithm `HS256`, access token 30 min, refresh token 7 days.
+
+**`search_engine/.env`**
+
+| Variable | Meaning |
+| :--- | :--- |
+| `REDIS_URL` | result cache (required by the server) |
+| `DATABASE_URL` | `bible_db` URL, used only by the `index_bible` tool |
+
+---
+
+## 🧪 Tests
+
 ```bash
 cd backend                      # FastAPI project root
 uv run pytest test/test.py      # run the route tests
 ```
 
----
+2. **Run migration to DB***
+```bash
+#run aerich migration
+docker compose exec api aerich upgrade
+
+#verify the tables in DB exist 
+docker compose exec db psql -U <your_db_user> -d <your_db_name>
+```
+
+3. **Open browser to test the docker app**
+```bash
+ # In your browser enter localhost:8080 OR 127.0.0.1:8080
+```
+
+
+
