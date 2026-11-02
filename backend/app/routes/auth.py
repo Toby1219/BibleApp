@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException, status, Depends, Response, Request
 from typing import Dict
 import jwt
-from fastapi_cache.decorator import cache
 from app.models.models import User, SearchHistory, UserBookMark, UserToken
 from app.models.bible_models import BibleContent
 from app.schemas.schema import (
@@ -22,7 +21,6 @@ from app.core.security import (
     decode_token,
 )
 from app.core.dependencies import get_current_user
-from ..utils.cache import custom_key_builder
 from ..utils.limiter import limiter
 
 router = APIRouter()
@@ -245,7 +243,6 @@ async def get_me(request: Request, current_user: User = Depends(get_current_user
 
 @router.get("/bookmark", response_model=UserBookmarkResponse)
 @limiter.limit("5/second")
-@cache(expire=600, key_builder=custom_key_builder)
 async def get_bookmarks(request: Request, current_user: User= Depends(get_current_user)):
     bookmark = await UserBookMark.filter(user=current_user).all()
     
