@@ -92,7 +92,8 @@ bible_webapp/
 
 ```bash
 docker compose up -d --build                               # build images; start db, redis, api, search and web
-docker compose exec api aerich --app auth_models upgrade   # create the auth tables (users, tokens, bookmarks, history)
+docker compose exec api aerich --app auth_models upgrade   # create the auth tables (users, tokens, bookmarks, history) 
+docker compose exec db psql -U <your_db_user> -d <your_db_name> # verify the tables in DB exist
 ```
 
 Then open **http://localhost:8080** (or `127.0.0.1:8080`). The API's interactive docs are at **http://localhost:8000/docs**.
@@ -196,19 +197,7 @@ cd backend                      # FastAPI project root
 uv run pytest test/test.py      # run the route tests
 ```
 
-2. **Run migration to DB***
-```bash
-#run aerich migration
-docker compose exec api aerich upgrade
 
-#verify the tables in DB exist 
-docker compose exec db psql -U <your_db_user> -d <your_db_name>
-```
-
-3. **Open browser to test the docker app**
-```bash
- # In your browser enter localhost:8080 OR 127.0.0.1:8080
-```
 
 
 
